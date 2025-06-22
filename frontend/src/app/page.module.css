@@ -1,0 +1,121 @@
+.container {
+  max-width: 720px;
+  margin: auto;
+  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.description {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.textarea {
+  width: 100%;
+  font-family: monospace;
+  font-size: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  resize: vertical;
+}
+
+.controls {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.generateButton {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.generateButton:hover {
+  background: #4338ca;
+}
+
+.toggleButton {
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.outputBox {
+  margin-top: 2rem;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f3f3f3;
+}
+
+.codeBlock {
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: monospace;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+}
+
+.copyButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ddd;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.light {
+  background: #ffffff;
+  color: #000000;
+  min-height: 100vh;
+}
+
+.dark {
+  background: #121212;
+  color: #e4e4e4;
+  min-height: 100vh;
+}
+
+.dark .textarea {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  color: white;
+}
+
+.dark .outputBox {
+  background: #1e1e1e;
+  border-color: #333;
+}
+
+.dark .codeBlock {
+  background: #1e1e1e;
+  color: #ddd;
+}
+
+.dark .copyButton {
+  background: #444;
+}
