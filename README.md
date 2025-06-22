@@ -2,11 +2,29 @@
 
 ## Overview
 
-**Py-GPT** is a project that leverages a custom-trained GPT model to generate Python code from function signatures. The project is organized into three main parts:
+**Py-GPT** is a project that leverages a custom-trained GPT-2 language model to generate Python code from function signatures. The project is organized into three main components:
 
-- **Backend:** Python API serving the GPT model for code generation.
+- **Backend:** Python Flask API serving the GPT model for code generation.
 - **Frontend:** Next.js web interface for user interaction.
 - **Notebooks:** Jupyter notebooks for model training, tokenization, and experimentation.
+
+---
+
+## 🚀 Hosted Model on Hugging Face
+
+Trained model files are hosted on Hugging Face and automatically loaded in the backend.
+
+🔗 Hugging Face Repo:  
+https://huggingface.co/Sankeyyyyy/gpt2-epoch1-checkpoint
+
+To download and load the model during runtime:
+
+```python
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
+model = GPT2LMHeadModel.from_pretrained("Sankeyyyyy/gpt2-epoch1-checkpoint")
+tokenizer = GPT2Tokenizer.from_pretrained("Sankeyyyyy/gpt2-epoch1-checkpoint")
+```
 
 ---
 
@@ -17,7 +35,7 @@ NanoGPT/
 ├── backend/
 │   ├── app.py
 │   ├── requirements.txt
-│   └── [model files, checkpoints, configs, vocab, etc.]
+│   └── (Model is loaded from Hugging Face)
 ├── frontend/
 │   ├── .gitignore
 │   ├── package.json
@@ -32,115 +50,123 @@ NanoGPT/
 
 ---
 
-## Notebooks
+## 🧠 Model Architecture
 
-### 1. Py-GPT (High level Tokenization).ipynb
+- **Base Model:** GPT2 (from HuggingFace `gpt2`)
+- **Fine-tuning:**
+  - Trained on a custom dataset of Python function signatures and implementations.
+  - Used Hugging Face’s `Trainer` class with `transformers` library.
+  - Training run completed for 1 epoch (with resume support for more).
 
-- **Purpose:**  
-  Demonstrates high-level tokenization strategies for preparing Python code data for GPT training.
-- **Contents:**  
-  - Data preprocessing and cleaning
-  - Tokenization using HuggingFace or custom tokenizers
-  - Exploratory data analysis on token distributions
-  - Saving processed datasets for model training
-
-### 2. Py-GPT (Low level Tokenization).ipynb
-
-- **Purpose:**  
-  Explores low-level, character-based or byte-level tokenization for fine-grained control.
-- **Contents:**  
-  - Implementation of custom tokenization logic
-  - Comparison with high-level tokenization
-  - Visualization of token sequences
-  - Preparing data for low-level model training
+**Key Hyperparameters:**
+- Block Size: 256
+- Batch Size: 2
+- Epochs: 3 (in progress)
+- Optimizer: AdamW
+- Evaluation Strategy: `epoch`
+- Tokenizer: `GPT2Tokenizer` with `eos_token` as padding
 
 ---
 
-## Backend
+## 🧪 Notebooks
+
+### 1. Py-GPT (High level Tokenization)
+
+- Tokenization using `transformers.GPT2Tokenizer`
+- Preprocessing with Pandas, Datasets
+- Prepares HuggingFace-compatible dataset for training
+
+### 2. Py-GPT (Low level Tokenization)
+
+- Custom character/byte-level tokenization using vocab files
+- Inspired by `NanoGPT` architecture
+- Used with manually defined `BigramLanguageModel`
+
+---
+
+## 🖥️ Backend
 
 ### Overview
 
-- **API:**  
-  The backend is a Python FastAPI/Flask app (`app.py`) that loads the trained GPT model and exposes an endpoint for code generation.
-- **Model Files:**  
-  - Model weights (`.pt`, `.safetensors`, etc.)
-  - Tokenizer files (`vocab.json`, `merges.txt`, etc.)
-  - Config files for model architecture and generation settings
+- **API:** Flask app (`app.py`) that serves the trained model via an endpoint.
+- **Model Source:** Loaded from Hugging Face Hub.
 
 ### Usage
 
-1. **Install dependencies:**
-   ```sh
-   pip install -r requirements.txt
-   ```
-2. **Run the API server:**
-   ```sh
-   python app.py
-   ```
-3. **API Endpoint:**
-   - `POST /generate`  
-     Request: `{ "prompt": "def my_function(x):" }`  
-     Response: `{ "completion": "def my_function(x):\n    # generated code..." }`
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+```
+
+### API Endpoint
+
+`POST /generate`
+
+- **Request:**
+  ```json
+  { "prompt": "def binary_search(arr, target):" }
+  ```
+
+- **Response:**
+  ```json
+  { "completion": "def binary_search(arr, target):\n    low = 0\n    high = len(arr) - 1\n    ..." }
+  ```
 
 ---
 
-## Frontend
+## 🌐 Frontend
 
 ### Overview
 
-- **Framework:** Next.js (React + TypeScript)
-- **Features:**
-  - User inputs a Python function signature
-  - Sends request to backend and displays generated code
-  - Light/Dark mode toggle
-  - Copy-to-clipboard functionality
+- Built using **Next.js** with TypeScript
+- UI allows users to enter function prompts and view generated code
+- Features:
+  - Light/Dark theme toggle
+  - Copy to clipboard
+  - Loading animation
 
 ### Usage
 
-1. **Install dependencies:**
-   ```sh
-   cd frontend
-   npm install
-   ```
-2. **Run the development server:**
-   ```sh
-   npm run dev
-   ```
-3. **Access the app:**  
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Then visit: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## Model Training & Customization
+## 🧠 Training Details
 
-- **Training:**  
-  Use the provided notebooks to preprocess data and train your own GPT model.
-- **Customization:**  
-  - Adjust tokenization strategies in the notebooks.
-  - Fine-tune model parameters and architecture as needed.
-- **Deployment:**  
-  Place your trained model files in the `backend` directory and update `app.py` to load them.
+- **Library:** Hugging Face Transformers
+- **Trainer:** `transformers.Trainer`
+- **Dataset:** Custom Python functions in CSV format
+- **Colab/Local Training:** Compatible with both Google Colab and Jupyter
 
 ---
 
-## Requirements
+## 📦 Requirements
 
-- **Backend:** Python 3.8+, PyTorch, Transformers, Flask/FastAPI
+- **Backend:** Python 3.8+, Flask, Torch, Transformers
 - **Frontend:** Node.js 18+, npm
-- **Notebooks:** Jupyter, pandas, numpy, matplotlib, transformers
+- **Training:** Jupyter, pandas, transformers, datasets
 
 ---
 
-## Notes
+## ❗ Notes
 
-- **Large files:**  
-  Model weights and checkpoints are not tracked by Git. Use [Git LFS](https://git-lfs.github.com/) if you need to version large files.
-- **.gitignore:**  
-  The project is set up to ignore Python cache, model files, node_modules, build artifacts, and environment files.
+- **Model files >100MB** are stored on Hugging Face instead of GitHub.
+- Use Git LFS only if hosting models locally:
+  ```bash
+  git lfs install
+  git lfs track "*.pt" "*.safetensors"
+  ```
 
 ---
 
-## License
+## 📜 License
 
 MIT License
 
@@ -149,5 +175,9 @@ MIT License
 ## Acknowledgements
 
 - [NanoGPT](https://github.com/karpathy/nanoGPT)
-- [HuggingFace Transformers](https://huggingface.co/docs/transformers/index)
--
+- [Hugging Face Transformers](https://huggingface.co/docs/transformers)
+- [OpenAI GPT-2](https://openai.com/research/better-language-models)
+
+---
+
+> ⭐ If you like this project, consider giving it a star on GitHub!
