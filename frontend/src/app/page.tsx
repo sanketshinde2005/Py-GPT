@@ -24,7 +24,7 @@ export default function Home() {
       });
       const data = await response.json();
       setResult(data.completion);
-    } catch (error) {
+    } catch {
       setResult("❌ Error connecting to backend.");
     } finally {
       setLoading(false);
